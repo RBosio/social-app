@@ -1,0 +1,105 @@
+version: '3'
+services:
+  api-gateway:
+    container_name: api-gateway
+    build:
+      context: .
+      dockerfile: ./apps/api-gateway/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 3000:3000
+    command: npm run start:dev
+    depends_on:
+      - user
+      - post
+      - group
+      - message
+      - rabbitmq
+      - mysql
+      - mongo
+
+  user:
+    container_name: user
+    build:
+      context: .
+      dockerfile: ./apps/user/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    command: npm run start:dev user
+    depends_on:
+      - rabbitmq
+      - mysql
+      - mongo
+
+  post:
+    container_name: post
+    build:
+      context: .
+      dockerfile: ./apps/post/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    command: npm run start:dev post
+    depends_on:
+      - rabbitmq
+      - mysql
+      - mongo
+
+  group:
+    container_name: group
+    build:
+      context: .
+      dockerfile: ./apps/group/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    command: npm run start:dev group
+    depends_on:
+      - rabbitmq
+      - mysql
+      - mongo
+
+  message:
+    container_name: message
+    build:
+      context: .
+      dockerfile: ./apps/message/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    command: npm run start:dev message
+    depends_on:
+      - rabbitmq
+      - mysql
+      - mongo
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.12-management
+    env_file:
+      - .env
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  mysql:
+    container_name: mysql
+    image: mysql:8.3
+    env_file:
+      - .env
+    ports:
+      - 3306:3306
+
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    ports:
+      - 27017:27017
