@@ -22,12 +22,12 @@ export class PostController {
 
   @Get()
   findPosts() {
-    return this.postService.send('find_posts', {});
+    return this.postService.send({ cmd: 'find_posts' }, {});
   }
 
   @Get(':postId')
   findPost(@Param('postId') postId: string) {
-    return this.postService.send('find_post', postId).pipe(
+    return this.postService.send({ cmd: 'find_post' }, postId).pipe(
       catchError((value) => {
         this.errorHandlerService.handle(value);
 
@@ -41,13 +41,15 @@ export class PostController {
     @Param('postId') postId: string,
     @Body() createPostDto: CreatePostDto,
   ) {
-    return this.postService.send('create_post', { postId, createPostDto }).pipe(
-      catchError((value) => {
-        this.errorHandlerService.handle(value);
+    return this.postService
+      .send({ cmd: 'create_post' }, { postId, createPostDto })
+      .pipe(
+        catchError((value) => {
+          this.errorHandlerService.handle(value);
 
-        return value;
-      }),
-    );
+          return value;
+        }),
+      );
   }
 
   @Patch(':postId')
@@ -55,18 +57,20 @@ export class PostController {
     @Param('postId') postId: string,
     @Body() updatePostDto: UpdatePostDto,
   ) {
-    return this.postService.send('update_post', { postId, updatePostDto }).pipe(
-      catchError((value) => {
-        this.errorHandlerService.handle(value);
+    return this.postService
+      .send({ cmd: 'update_post' }, { postId, updatePostDto })
+      .pipe(
+        catchError((value) => {
+          this.errorHandlerService.handle(value);
 
-        return value;
-      }),
-    );
+          return value;
+        }),
+      );
   }
 
   @Delete(':postId')
   deletePost(@Param('postId') postId: string) {
-    return this.postService.send('delete_post', postId).pipe(
+    return this.postService.send({ cmd: 'delete_post' }, postId).pipe(
       catchError((value) => {
         this.errorHandlerService.handle(value);
 

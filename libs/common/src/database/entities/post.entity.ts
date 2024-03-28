@@ -11,5 +11,5 @@ export class Post extends BaseEntity {
   image?: string;
 
   @ManyToOne(() => User, (user) => user.posts)
-  user: number;
+  user: User;
 }

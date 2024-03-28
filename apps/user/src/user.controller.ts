@@ -15,15 +15,15 @@ export class UserController {
     private rmqService: RmqService,
   ) {}
 
-  @MessagePattern('find_users')
-  findUsers(@Ctx() context: RmqContext): Promise<User[]> {
+  @MessagePattern({ cmd: 'find_users' })
+  async findUsers(@Ctx() context: RmqContext): Promise<User[]> {
     this.rmqService.acknowledgmentMessage(context);
 
     return this.userService.findUsers();
   }
 
-  @MessagePattern('find_user')
-  findUser(
+  @MessagePattern({ cmd: 'find_user' })
+  async findUser(
     @Ctx() context: RmqContext,
     @Payload() userId: string,
   ): Promise<User> {
@@ -32,7 +32,7 @@ export class UserController {
     return this.userService.findUserById(userId);
   }
 
-  @MessagePattern('create_user')
+  @MessagePattern({ cmd: 'create_user' })
   async createUser(
     @Ctx() context: RmqContext,
     @Payload()
@@ -48,7 +48,7 @@ export class UserController {
     return 'user created!';
   }
 
-  @MessagePattern('update_user')
+  @MessagePattern({ cmd: 'update_user' })
   async updateUser(
     @Ctx() context: RmqContext,
     @Payload()
@@ -64,7 +64,7 @@ export class UserController {
     return 'user updated!';
   }
 
-  @MessagePattern('delete_user')
+  @MessagePattern({ cmd: 'delete_user' })
   async deleteUser(
     @Ctx() context: RmqContext,
     @Payload() userId: string,

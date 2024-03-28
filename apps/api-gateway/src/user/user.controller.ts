@@ -22,12 +22,12 @@ export class UserController {
 
   @Get()
   findUsers() {
-    return this.userService.send('find_users', {});
+    return this.userService.send({ cmd: 'find_users' }, {});
   }
 
   @Get(':userId')
   findUser(@Param('userId') userId: string) {
-    return this.userService.send('find_user', userId).pipe(
+    return this.userService.send({ cmd: 'find_user' }, userId).pipe(
       catchError((value) => {
         this.errorHandlerService.handle(value);
 
@@ -42,10 +42,13 @@ export class UserController {
     @Body() createUserDto: CreateUserDto,
   ) {
     return this.userService
-      .send('create_user', {
-        userId,
-        createUserDto,
-      })
+      .send(
+        { cmd: 'create_user' },
+        {
+          userId,
+          createUserDto,
+        },
+      )
       .pipe(
         catchError((value) => {
           this.errorHandlerService.handle(value);
@@ -61,10 +64,13 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     return this.userService
-      .send('update_user', {
-        userId,
-        updateUserDto,
-      })
+      .send(
+        { cmd: 'update_user' },
+        {
+          userId,
+          updateUserDto,
+        },
+      )
       .pipe(
         catchError((value) => {
           this.errorHandlerService.handle(value);
@@ -76,7 +82,7 @@ export class UserController {
 
   @Delete(':userId')
   deleteUser(@Param('userId') userId: string) {
-    return this.userService.send('delete_user', userId).pipe(
+    return this.userService.send({ cmd: 'delete_user' }, userId).pipe(
       catchError((value) => {
         this.errorHandlerService.handle(value);
 
