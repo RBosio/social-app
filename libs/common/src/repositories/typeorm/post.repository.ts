@@ -7,7 +7,7 @@ export class PostTypeOrmRepository
   extends TypeOrmRepository<Post>
   implements PostRepository
 {
-  constructor(private postRepository: Repository<Post>) {
+  constructor(private readonly postRepository: Repository<Post>) {
     super(postRepository);
   }
 }
