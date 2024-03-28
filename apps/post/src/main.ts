@@ -1,14 +1,15 @@
 import { NestFactory } from '@nestjs/core';
-import { PostModule } from './post.module';
-import { POST_SERVICE, RmqService } from '@app/common';
+import { COMMENT_SERVICE, POST_SERVICE, RmqService } from '@app/common';
+import { BaseModule } from './base.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(PostModule);
+  const app = await NestFactory.create(BaseModule);
 
   const rmqService = app.get(RmqService);
   app.connectMicroservice(rmqService.getRmqOptions(POST_SERVICE));
+  app.connectMicroservice(rmqService.getRmqOptions(COMMENT_SERVICE));
 
   await app.listen(null);
-  app.startAllMicroservices()
+  app.startAllMicroservices();
 }
 bootstrap();
