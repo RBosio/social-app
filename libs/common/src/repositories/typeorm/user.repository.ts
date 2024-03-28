@@ -1,4 +1,4 @@
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { User } from '../../database/entities/user.entity';
 import { CreateUserDto } from '../../dto/user/create-user.dto';
 import { UserRepository } from '../interfaces/user.repository';
@@ -16,7 +16,7 @@ export class UserTypeOrmRepository implements UserRepository {
     await this.userRepository.save(entity);
   }
 
-  async findAll(options?: object): Promise<User[]> {
+  async findAll(options?: FindManyOptions): Promise<User[]> {
     return this.userRepository.find(options);
   }
 
@@ -26,8 +26,12 @@ export class UserTypeOrmRepository implements UserRepository {
     });
   }
 
-  async findOneByOptions(options: FindOneOptions): Promise<User> {
-    return this.userRepository.findOne(options);
+  async findOneByEmail(email: string): Promise<User> {
+    return this.userRepository.findOne({
+      where: {
+        email,
+      },
+    });
   }
 
   async delete(id: string): Promise<void> {
