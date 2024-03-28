@@ -8,12 +8,10 @@ import { DataSource } from 'typeorm';
 import { TypeOrmModule, getDataSourceToken } from '@nestjs/typeorm';
 import { UserModule } from 'apps/user/src/user.module';
 import { UserService } from 'apps/user/src/user.service';
+import { CommentModule } from '../comment/comment.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
     RmqModule,
     MysqlModule,
     TypeOrmModule.forFeature([Post]),
@@ -36,5 +34,6 @@ import { UserService } from 'apps/user/src/user.service';
       inject: [PostTypeOrmRepository, UserService],
     },
   ],
+  exports: [PostService],
 })
 export class PostModule {}
