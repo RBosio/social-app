@@ -1,4 +1,9 @@
-import { DeepPartial, FindOneOptions, Repository } from 'typeorm';
+import {
+  DeepPartial,
+  FindOneOptions,
+  FindOptionsRelations,
+  Repository,
+} from 'typeorm';
 import { BaseRepository } from '../interfaces/base.repository';
 import { BaseEntity } from '@app/common/database/entities/base.entity';
 
@@ -15,13 +20,17 @@ export class TypeOrmRepository<T extends BaseEntity>
     await this.repository.save(entity);
   }
 
-  findAll(options?: object): Promise<T[]> {
+  async findAll(options?: object): Promise<T[]> {
     return this.repository.find(options);
   }
 
-  findOneById(id: string): Promise<T> {
+  async findOneById(
+    id: string,
+    relations?: FindOptionsRelations<T>,
+  ): Promise<T> {
     const options: FindOneOptions = {
       where: { id },
+      relations,
     };
     return this.repository.findOne(options);
   }
