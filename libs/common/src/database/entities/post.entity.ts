@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToMany, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { User } from './user.entity';
+import { Comment } from './comment.entity';
 
 @Entity()
 export class Post extends BaseEntity {
@@ -9,6 +10,9 @@ export class Post extends BaseEntity {
 
   @Column({ nullable: true })
   image?: string;
+
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments: Comment[];
 
   @ManyToOne(() => User, (user) => user.posts)
   user: User;
