@@ -3,6 +3,6 @@ export interface BaseRepository<T> {
   save(entity: T): Promise<void>;
   findAll(options?: object): Promise<T[]>;
   findOneById(id: string): Promise<T>;
-  findOneByOptions(options: object): Promise<T>;
+  findOneByEmail(email: string): Promise<T>;
   delete(id: string): Promise<void>;
 }
