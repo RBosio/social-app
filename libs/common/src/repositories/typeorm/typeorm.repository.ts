@@ -1,6 +1,8 @@
 import {
   DeepPartial,
+  FindManyOptions,
   FindOneOptions,
+  FindOptions,
   FindOptionsRelations,
   Repository,
 } from 'typeorm';
@@ -20,7 +22,10 @@ export class TypeOrmRepository<T extends BaseEntity>
     await this.repository.save(entity);
   }
 
-  async findAll(options?: object): Promise<T[]> {
+  async findAll(relations?: FindOptionsRelations<T>): Promise<T[]> {
+    const options: FindManyOptions = {
+      relations,
+    };
     return this.repository.find(options);
   }
 

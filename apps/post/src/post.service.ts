@@ -11,7 +11,10 @@ export class PostService {
   ) {}
 
   async findPosts(): Promise<Post[]> {
-    return this.postRepository.findAll();
+    return this.postRepository.findAll({
+      user: true,
+      likedBy: true,
+    });
   }
 
   async findPost(postId: string): Promise<Post> {
