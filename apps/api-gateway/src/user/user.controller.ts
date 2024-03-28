@@ -10,10 +10,15 @@ import {
   Put,
 } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
+import { catchError } from 'rxjs';
+import { ErrorHandlerService } from '../error/error-handler.service';
 
 @Controller('user')
 export class UserController {
-  constructor(@Inject(USER_SERVICE) private userService: ClientRMQ) {}
+  constructor(
+    @Inject(USER_SERVICE) private userService: ClientRMQ,
+    private errorHandlerService: ErrorHandlerService,
+  ) {}
 
   @Get()
   findUsers() {
@@ -22,7 +27,13 @@ export class UserController {
 
   @Get(':userId')
   findUser(@Param('userId') userId: string) {
-    return this.userService.send('find_user', userId);
+    return this.userService.send('find_user', userId).pipe(
+      catchError((value) => {
+        this.errorHandlerService.handle(value);
+
+        return value;
+      }),
+    );
   }
 
   @Put(':userId')
@@ -30,10 +41,18 @@ export class UserController {
     @Param('userId') userId: string,
     @Body() createUserDto: CreateUserDto,
   ) {
-    return this.userService.send('create_user', {
-      userId,
-      createUserDto,
-    });
+    return this.userService
+      .send('create_user', {
+        userId,
+        createUserDto,
+      })
+      .pipe(
+        catchError((value) => {
+          this.errorHandlerService.handle(value);
+
+          return value;
+        }),
+      );
   }
 
   @Patch(':userId')
@@ -41,14 +60,28 @@ export class UserController {
     @Param('userId') userId: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return this.userService.send('update_user', {
-      userId,
-      updateUserDto,
-    });
+    return this.userService
+      .send('update_user', {
+        userId,
+        updateUserDto,
+      })
+      .pipe(
+        catchError((value) => {
+          this.errorHandlerService.handle(value);
+
+          return value;
+        }),
+      );
   }
 
   @Delete(':userId')
   deleteUser(@Param('userId') userId: string) {
-    return this.userService.send('delete_user', userId);
+    return this.userService.send('delete_user', userId).pipe(
+      catchError((value) => {
+        this.errorHandlerService.handle(value);
+
+        return value;
+      }),
+    );
   }
 }
