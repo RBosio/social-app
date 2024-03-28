@@ -52,6 +52,19 @@ export class PostController {
       );
   }
 
+  @Patch('like/:postId/:userId')
+  likePost(@Param('postId') postId: string, @Param('userId') userId: string) {
+    return this.postService
+      .send({ cmd: 'like_post' }, { postId, userId })
+      .pipe(
+        catchError((value) => {
+          this.errorHandlerService.handle(value);
+
+          return value;
+        }),
+      );
+  }
+
   @Patch(':postId')
   updatePost(
     @Param('postId') postId: string,

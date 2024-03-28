@@ -44,6 +44,18 @@ export class PostController {
     return 'post created';
   }
 
+  @MessagePattern({ cmd: 'like_post' })
+  async likePost(
+    @Ctx() context: RmqContext,
+    @Payload() data: { userId: string; postId: string },
+  ): Promise<string> {
+    this.rmqService.acknowledgmentMessage(context);
+
+    await this.postService.likePost(data.userId, data.postId);
+
+    return 'post created';
+  }
+
   @MessagePattern({ cmd: 'update_post' })
   async updatePost(
     @Ctx() context: RmqContext,

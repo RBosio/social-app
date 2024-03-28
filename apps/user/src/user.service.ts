@@ -16,7 +16,9 @@ export class UserService {
   }
 
   async findUserById(id: string): Promise<User> {
-    const user = await this.userRepository.findOneById(id);
+    const user = await this.userRepository.findOneById(id, {
+      posts: true,
+    });
     if (!user)
       throw new RpcException({
         message: 'user not found',
