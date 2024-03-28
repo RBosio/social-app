@@ -1,4 +1,6 @@
-import { User } from '../../database/entities/user.entity';
+import { User } from '@app/common/database';
 import { BaseRepository } from './base.repository';
 
-export interface UserRepository extends BaseRepository<User> {}
+export interface UserRepository extends BaseRepository<User> {
+  findOneByEmail(email: string): Promise<User>;
+}

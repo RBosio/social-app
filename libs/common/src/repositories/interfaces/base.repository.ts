@@ -1,8 +1,7 @@
 export interface BaseRepository<T> {
-  create(data: object): T;
+  create(data: any): T;
   save(entity: T): Promise<void>;
-  findAll(options?: object): Promise<T[]>;
+  findAll(options?: any): Promise<T[]>;
   findOneById(id: string): Promise<T>;
-  findOneByEmail(email: string): Promise<T>;
   delete(id: string): Promise<void>;
 }

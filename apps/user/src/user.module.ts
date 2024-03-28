@@ -38,5 +38,6 @@ import { TypeOrmModule, getDataSourceToken } from '@nestjs/typeorm';
       inject: [UserTypeOrmRepository],
     },
   ],
+  exports: [UserService],
 })
 export class UserModule {}
