@@ -10,19 +10,30 @@ import {
   Put,
 } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
+import { catchError } from 'rxjs';
+import { ErrorHandlerService } from '../error/error-handler.service';
 
 @Controller('group')
 export class GroupController {
-  constructor(@Inject(GROUP_SERVICE) private groupService: ClientRMQ) {}
+  constructor(
+    @Inject(GROUP_SERVICE) private groupService: ClientRMQ,
+    private errorHandlerService: ErrorHandlerService,
+  ) {}
 
   @Get()
   findGroups() {
-    return this.groupService.send('find_groups', {});
+    return this.groupService.send({ cmd: 'find_groups' }, {});
   }
 
   @Get(':groupId')
-  findGroup() {
-    return this.groupService.send('find_group', {});
+  findGroup(@Param('groupId') groupId: string) {
+    return this.groupService.send({ cmd: 'find_group' }, groupId).pipe(
+      catchError((value) => {
+        this.errorHandlerService.handle(value);
+
+        return value;
+      }),
+    );
   }
 
   @Put(':groupId')
@@ -30,7 +41,15 @@ export class GroupController {
     @Param('groupId') groupId: string,
     @Body() createGroupDto: CreateGroupDto,
   ) {
-    return this.groupService.send('create_group', { groupId, createGroupDto });
+    return this.groupService
+      .send({ cmd: 'create_group' }, { groupId, createGroupDto })
+      .pipe(
+        catchError((value) => {
+          this.errorHandlerService.handle(value);
+
+          return value;
+        }),
+      );
   }
 
   @Patch(':groupId')
@@ -38,16 +57,36 @@ export class GroupController {
     @Param('groupId') groupId: string,
     @Body() updateGroupDto: UpdateGroupDto,
   ) {
-    return this.groupService.send('update_group', { groupId, updateGroupDto });
+    return this.groupService
+      .send({ cmd: 'update_group' }, { groupId, updateGroupDto })
+      .pipe(
+        catchError((value) => {
+          this.errorHandlerService.handle(value);
+
+          return value;
+        }),
+      );
   }
 
   @Patch(':groupId/accept-friend')
   acceptFriend(@Param('groupId') groupId: string) {
-    return this.groupService.send('accept_friend', { groupId });
+    return this.groupService.send({ cmd: 'accept_friend' }, groupId).pipe(
+      catchError((value) => {
+        this.errorHandlerService.handle(value);
+
+        return value;
+      }),
+    );
   }
 
   @Delete(':groupId')
   deleteGroup(@Param('groupId') groupId: string) {
-    return this.groupService.send('delete_group', { groupId });
+    return this.groupService.send({ cmd: 'delete_group' }, groupId).pipe(
+      catchError((value) => {
+        this.errorHandlerService.handle(value);
+
+        return value;
+      }),
+    );
   }
 }
