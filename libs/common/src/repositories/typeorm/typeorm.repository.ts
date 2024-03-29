@@ -4,6 +4,7 @@ import {
   FindOneOptions,
   FindOptions,
   FindOptionsRelations,
+  FindOptionsWhere,
   Repository,
 } from 'typeorm';
 import { BaseRepository } from '../interfaces/base.repository';
@@ -22,8 +23,12 @@ export class TypeOrmRepository<T extends BaseEntity>
     await this.repository.save(entity);
   }
 
-  async findAll(relations?: FindOptionsRelations<T>): Promise<T[]> {
+  async findAll(
+    where?: FindOptionsWhere<T>,
+    relations?: FindOptionsRelations<T>,
+  ): Promise<T[]> {
     const options: FindManyOptions = {
+      where,
       relations,
     };
     return this.repository.find(options);
