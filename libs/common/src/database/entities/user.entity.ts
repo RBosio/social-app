@@ -9,6 +9,7 @@ import {
 import { BaseEntity } from './base.entity';
 import { Post } from './post.entity';
 import { Comment } from './comment.entity';
+import { Group } from './group.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -33,4 +34,8 @@ export class User extends BaseEntity {
   @ManyToMany(() => Post, (post) => post.likedBy)
   @JoinTable()
   likedPosts: Post[];
+
+  @ManyToMany(() => Group, (group) => group.users)
+  @JoinTable()
+  groups: Group[];
 }
