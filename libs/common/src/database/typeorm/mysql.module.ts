@@ -5,6 +5,7 @@ import { User } from '../entities/user.entity';
 import { Post } from '../entities/post.entity';
 import { Comment } from '../entities/comment.entity';
 import { Group } from '../entities/group.entity';
+import { Message } from '../entities/message.entity';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { Group } from '../entities/group.entity';
         host: 'mysql',
         port: configService.get<number>('MYSQL_PORT'),
         url: configService.get<string>('MYSQL_URI'),
-        entities: [User, Post, Comment, Group],
+        entities: [User, Post, Comment, Group, Message],
         synchronize: configService.get<boolean>('MYSQL_SYNCHRONIZE'),
       }),
       inject: [ConfigService],

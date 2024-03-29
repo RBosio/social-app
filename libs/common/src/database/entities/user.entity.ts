@@ -10,6 +10,7 @@ import { BaseEntity } from './base.entity';
 import { Post } from './post.entity';
 import { Comment } from './comment.entity';
 import { Group } from './group.entity';
+import { Message } from './message.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -28,7 +29,10 @@ export class User extends BaseEntity {
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
 
-  @ManyToOne(() => Comment, (comment) => comment.user)
+  @OneToMany(() => Message, (message) => message.user)
+  messages: Message[];
+
+  @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
 
   @ManyToMany(() => Post, (post) => post.likedBy)
