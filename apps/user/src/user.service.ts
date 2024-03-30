@@ -6,6 +6,7 @@ import {
 } from '@app/common';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
+import { hash } from 'bcryptjs';
 
 @Injectable()
 export class UserService {
@@ -43,12 +44,13 @@ export class UserService {
     const userFounded = await this.findUserByEmail(createUserDto.email);
     if (userFounded)
       throw new RpcException({
-        message: 'user already exists',
+        message: 'email already exists',
         status: HttpStatus.BAD_REQUEST,
       });
 
     const user = this.userRepository.create(createUserDto);
     user.id = id;
+    user.password = await hash(user.password, 10);
 
     await this.userRepository.save(user);
   }
