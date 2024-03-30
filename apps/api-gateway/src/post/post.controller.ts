@@ -14,6 +14,7 @@ import { catchError } from 'rxjs';
 import { ErrorHandlerService } from '../error/error-handler.service';
 import {
   ApiBody,
+  ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -73,8 +74,8 @@ export class PostController {
   @ApiBody({
     type: CreatePostDto,
   })
-  @ApiOkResponse({
-    description: 'Return created post',
+  @ApiCreatedResponse({
+    description: 'Post created',
   })
   @ApiNotFoundResponse({
     description: 'User not found',

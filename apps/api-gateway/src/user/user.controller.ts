@@ -15,6 +15,7 @@ import { ErrorHandlerService } from '../error/error-handler.service';
 import {
   ApiBadRequestResponse,
   ApiBody,
+  ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -72,7 +73,7 @@ export class UserController {
     example: '2d4d6481-37b1-4db6-b675-9c08a89b81af',
   })
   @ApiBody({ type: CreateUserDto })
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description: 'User created',
   })
   @ApiBadRequestResponse({
