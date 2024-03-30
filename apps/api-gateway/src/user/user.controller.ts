@@ -13,6 +13,7 @@ import { ClientRMQ } from '@nestjs/microservices';
 import { catchError } from 'rxjs';
 import { ErrorHandlerService } from '../error/error-handler.service';
 import {
+  ApiBadRequestResponse,
   ApiBody,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -73,6 +74,9 @@ export class UserController {
   @ApiBody({ type: CreateUserDto })
   @ApiOkResponse({
     description: 'User created',
+  })
+  @ApiBadRequestResponse({
+    description: 'Email already exists',
   })
   @ApiNotFoundResponse({
     description: 'User not found',
