@@ -41,7 +41,7 @@ export class PostController {
 
     await this.postService.createPost(data.postId, data.createPostDto);
 
-    return 'post created';
+    return 'post created!';
   }
 
   @MessagePattern({ cmd: 'like_post' })
@@ -53,7 +53,7 @@ export class PostController {
 
     await this.postService.likePost(data.userId, data.postId);
 
-    return 'post created';
+    return 'post liked!';
   }
 
   @MessagePattern({ cmd: 'update_post' })
@@ -65,7 +65,7 @@ export class PostController {
 
     await this.postService.updatePost(data.postId, data.updatePostDto);
 
-    return 'post updated';
+    return 'post updated!';
   }
 
   @MessagePattern({ cmd: 'delete_post' })
@@ -77,6 +77,6 @@ export class PostController {
 
     await this.postService.deletePost(postId);
 
-    return 'post deleted';
+    return 'post deleted!';
   }
 }
