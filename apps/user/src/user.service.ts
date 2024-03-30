@@ -12,7 +12,11 @@ export class UserService {
   constructor(private userRepository: UserRepository) {}
 
   async findUsers(): Promise<User[]> {
-    return this.userRepository.findAll();
+    const users = await this.userRepository.findAll();
+
+    users.forEach((user) => delete user.password);
+
+    return users;
   }
 
   async findUserById(id: string): Promise<User> {
@@ -25,6 +29,8 @@ export class UserService {
         message: 'user not found',
         status: HttpStatus.NOT_FOUND,
       });
+
+    delete user.password;
 
     return user;
   }
