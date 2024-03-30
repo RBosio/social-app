@@ -1,5 +1,13 @@
 import { MESSAGE_SERVICE } from '@app/common';
-import { Body, Controller, Delete, Get, Inject, Param, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  Param,
+  Put,
+} from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
 import { catchError } from 'rxjs';
 import { ErrorHandlerService } from '../error/error-handler.service';
@@ -30,14 +38,12 @@ export class MessageController {
 
   @Delete(':messageId')
   async deleteMessage(@Param('messageId') messageId: string) {
-    return this.messageService
-      .send({ cmd: 'delete_message' }, { messageId })
-      .pipe(
-        catchError((value) => {
-          this.errorHandlerService.handle(value);
+    return this.messageService.send({ cmd: 'delete_message' }, messageId).pipe(
+      catchError((value) => {
+        this.errorHandlerService.handle(value);
 
-          return value;
-        }),
-      );
+        return value;
+      }),
+    );
   }
 }
