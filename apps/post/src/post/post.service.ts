@@ -16,13 +16,16 @@ export class PostService {
   ) {}
 
   async findPosts(): Promise<Post[]> {
-    return this.postRepository.findAll({
-      user: true,
-      likedBy: true,
-      comments: {
+    return this.postRepository.findAll(
+      {},
+      {
         user: true,
+        likedBy: true,
+        comments: {
+          user: true,
+        },
       },
-    });
+    );
   }
 
   async findPost(postId: string): Promise<Post> {
