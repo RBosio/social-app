@@ -12,7 +12,16 @@ import {
 import { ClientRMQ } from '@nestjs/microservices';
 import { catchError } from 'rxjs';
 import { ErrorHandlerService } from '../error/error-handler.service';
+import {
+  ApiBody,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(
@@ -21,11 +30,28 @@ export class UserController {
   ) {}
 
   @Get()
+  @ApiOperation({ summary: 'Find all users' })
+  @ApiOkResponse({
+    description: 'Return all users',
+  })
   findUsers() {
     return this.userService.send({ cmd: 'find_users' }, {});
   }
 
   @Get(':userId')
+  @ApiOperation({ summary: 'Find user by id' })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'User id',
+    example: '2d4d6481-37b1-4db6-b675-9c08a89b81af',
+  })
+  @ApiOkResponse({
+    description: 'Return user by id',
+  })
+  @ApiNotFoundResponse({
+    description: 'User not found',
+  })
   findUser(@Param('userId') userId: string) {
     return this.userService.send({ cmd: 'find_user' }, userId).pipe(
       catchError((value) => {
@@ -37,6 +63,20 @@ export class UserController {
   }
 
   @Put(':userId')
+  @ApiOperation({ summary: 'Create user' })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'User id',
+    example: '2d4d6481-37b1-4db6-b675-9c08a89b81af',
+  })
+  @ApiBody({ type: CreateUserDto })
+  @ApiOkResponse({
+    description: 'User created',
+  })
+  @ApiNotFoundResponse({
+    description: 'User not found',
+  })
   createUser(
     @Param('userId') userId: string,
     @Body() createUserDto: CreateUserDto,
@@ -59,6 +99,20 @@ export class UserController {
   }
 
   @Patch(':userId')
+  @ApiOperation({ summary: 'Update user' })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'User id',
+    example: '2d4d6481-37b1-4db6-b675-9c08a89b81af',
+  })
+  @ApiBody({ type: UpdateUserDto })
+  @ApiOkResponse({
+    description: 'User updated',
+  })
+  @ApiNotFoundResponse({
+    description: 'User not found',
+  })
   updateUser(
     @Param('userId') userId: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -81,6 +135,19 @@ export class UserController {
   }
 
   @Delete(':userId')
+  @ApiOperation({ summary: 'Delete user' })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'User id',
+    example: '2d4d6481-37b1-4db6-b675-9c08a89b81af',
+  })
+  @ApiOkResponse({
+    description: 'User deleted',
+  })
+  @ApiNotFoundResponse({
+    description: 'User not found',
+  })
   deleteUser(@Param('userId') userId: string) {
     return this.userService.send({ cmd: 'delete_user' }, userId).pipe(
       catchError((value) => {
