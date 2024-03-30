@@ -20,8 +20,8 @@ export class MessageService {
 
     const message = this.messageRepository.create(createMessageDto);
     message.id = messageId;
-    message.user;
-    message.group;
+    message.user = user;
+    message.group = group;
 
     await this.messageRepository.save(message);
   }

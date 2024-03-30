@@ -31,5 +31,5 @@ export class CreateGroupDto {
   })
   @IsNotEmpty()
   @IsArray()
-  usersId: number[];
+  usersId: string[];
 }

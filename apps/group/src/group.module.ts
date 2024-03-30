@@ -11,6 +11,8 @@ import {
 } from '@app/common';
 import { TypeOrmModule, getDataSourceToken } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import { UserService } from 'apps/user/src/user.service';
+import { UserModule } from 'apps/user/src/user.module';
 
 @Module({
   imports: [
@@ -20,6 +22,7 @@ import { DataSource } from 'typeorm';
     RmqModule,
     MysqlModule,
     TypeOrmModule.forFeature([Group]),
+    UserModule
   ],
   controllers: [GroupController],
   providers: [
@@ -32,11 +35,12 @@ import { DataSource } from 'typeorm';
     },
     {
       provide: GroupService,
-      useFactory: (groupRepo: GroupRepository) => {
-        return new GroupService(groupRepo);
+      useFactory: (groupRepo: GroupRepository, userService: UserService) => {
+        return new GroupService(groupRepo, userService);
       },
-      inject: [GroupTypeOrmRepository],
+      inject: [GroupTypeOrmRepository, UserService],
     },
   ],
+  exports: [GroupService],
 })
 export class GroupModule {}
