@@ -4,13 +4,13 @@ import {
   User,
   UserRepository,
 } from '@app/common';
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { hash } from 'bcryptjs';
 
 @Injectable()
 export class UserService {
-  constructor(private userRepository: UserRepository) {}
+  constructor(@Inject("UserRepository") private userRepository: UserRepository) {}
 
   async findUsers(): Promise<User[]> {
     const users = await this.userRepository.findAll();
