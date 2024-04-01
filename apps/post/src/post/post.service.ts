@@ -4,14 +4,14 @@ import {
   PostRepository,
   UpdatePostDto,
 } from '@app/common';
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
-import { UserService } from 'apps/user/src/user.service';
+import { UserService } from '../../../user/src/user.service';
 
 @Injectable()
 export class PostService {
   constructor(
-    private postRepository: PostRepository,
+    @Inject('PostRepository') private postRepository: PostRepository,
     private userService: UserService,
   ) {}
 
@@ -79,6 +79,8 @@ export class PostService {
   }
 
   async deletePost(postId: string): Promise<void> {
+    await this.findPost(postId);
+
     await this.postRepository.delete(postId);
   }
 }
