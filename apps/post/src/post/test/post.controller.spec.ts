@@ -3,11 +3,13 @@ import { PostController } from '../post.controller';
 import { PostService } from '../post.service';
 import { CreatePostDto, Post, RmqService, UpdatePostDto } from '@app/common';
 import { postStub } from './stubs/post.stub';
+import { RmqContext } from '@nestjs/microservices';
 
 jest.mock('../post.service');
 describe('PostController', () => {
   let postController: PostController;
   let postService: PostService;
+  const mockContext = {} as unknown as RmqContext;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -27,17 +29,12 @@ describe('PostController', () => {
     postService = moduleRef.get<PostService>(PostService);
   });
 
-  test('should be defined', () => {
-    expect(postController).toBeDefined();
-    expect(postService).toBeDefined();
-  });
-
   describe('findPosts', () => {
     describe('when findPosts is called', () => {
       let posts: Post[];
 
       beforeEach(async () => {
-        posts = await postController.findPosts({} as any);
+        posts = await postController.findPosts(mockContext);
       });
 
       test('then it should call postService', () => {
@@ -55,7 +52,7 @@ describe('PostController', () => {
       let post: Post;
 
       beforeEach(async () => {
-        post = await postController.findPost({} as any, postStub().id);
+        post = await postController.findPost(mockContext, postStub().id);
       });
 
       test('then it should call postService', () => {
@@ -77,7 +74,7 @@ describe('PostController', () => {
       };
 
       beforeEach(async () => {
-        response = await postController.createPost({} as any, {
+        response = await postController.createPost(mockContext, {
           postId: postStub().id,
           createPostDto,
         });
@@ -96,6 +93,30 @@ describe('PostController', () => {
     });
   });
 
+  describe('likePost', () => {
+    describe('when likePost is called', () => {
+      let response;
+
+      beforeEach(async () => {
+        response = await postController.likePost(mockContext, {
+          postId: postStub().id,
+          userId: postStub().user.id,
+        });
+      });
+
+      test('then it should call postService', () => {
+        expect(postService.likePost).toHaveBeenCalledWith(
+          postStub().user.id,
+          postStub().id,
+        );
+      });
+
+      test("then it should return 'post liked!'", () => {
+        expect(response).toEqual('post liked!');
+      });
+    });
+  });
+
   describe('updatePost', () => {
     describe('when updatePost is called', () => {
       let response;
@@ -103,7 +124,7 @@ describe('PostController', () => {
         description: postStub().description,
       };
       beforeEach(async () => {
-        response = await postController.updatePost({} as any, {
+        response = await postController.updatePost(mockContext, {
           postId: postStub().id,
           updatePostDto,
         });
@@ -127,7 +148,7 @@ describe('PostController', () => {
       let response;
 
       beforeEach(async () => {
-        response = await postController.deletePost({} as any, postStub().id);
+        response = await postController.deletePost(mockContext, postStub().id);
       });
 
       test('then it should call postService', () => {

@@ -3,11 +3,13 @@ import { UserController } from '../user.controller';
 import { UserService } from '../user.service';
 import { CreateUserDto, RmqService, UpdateUserDto, User } from '@app/common';
 import { userStub } from './stubs/user.stub';
+import { RmqContext } from '@nestjs/microservices';
 
 jest.mock('../user.service');
 describe('UserController', () => {
   let userController: UserController;
   let userService: UserService;
+  const mockContext = {} as unknown as RmqContext;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -34,7 +36,7 @@ describe('UserController', () => {
       let users: User[] = [];
 
       beforeEach(async () => {
-        users = await userController.findUsers({} as any);
+        users = await userController.findUsers(mockContext);
       });
 
       test('then it should call userService', () => {
@@ -52,7 +54,7 @@ describe('UserController', () => {
       let user: User;
 
       beforeEach(async () => {
-        user = await userController.findUser({} as any, userStub().id);
+        user = await userController.findUser(mockContext, userStub().id);
       });
 
       test('then it should call userService', () => {
@@ -75,7 +77,7 @@ describe('UserController', () => {
       let response: string;
 
       beforeEach(async () => {
-        response = await userController.createUser({} as any, {
+        response = await userController.createUser(mockContext, {
           userId: userStub().id,
           createUserDto,
         });
@@ -101,7 +103,7 @@ describe('UserController', () => {
       };
       let response;
       beforeEach(async () => {
-        response = await userController.updateUser({} as any, {
+        response = await userController.updateUser(mockContext, {
           userId: userStub().id,
           updateUserDto,
         });
@@ -125,7 +127,7 @@ describe('UserController', () => {
       let response: string;
 
       beforeEach(async () => {
-        response = await userController.deleteUser({} as any, userStub().id);
+        response = await userController.deleteUser(mockContext, userStub().id);
       });
 
       test('then it should call userService', () => {
