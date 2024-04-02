@@ -217,6 +217,9 @@ describe('PostService', () => {
     });
 
     describe('when updatePost is called and post no exist', () => {
+      const updatePostDto: UpdatePostDto = {
+        description: postStub().description,
+      };
       test('then it should throw rpc exception', async () => {
         jest.spyOn(postService, 'findPost').mockRejectedValueOnce(
           new RpcException({
@@ -225,7 +228,7 @@ describe('PostService', () => {
           }),
         );
         await expect(
-          postService.likePost(postStub().user.id, postStub().id),
+          postService.updatePost(postStub().id, updatePostDto),
         ).rejects.toThrow(RpcException);
       });
     });
@@ -257,7 +260,7 @@ describe('PostService', () => {
           }),
         );
         await expect(
-          postService.likePost(postStub().user.id, postStub().id),
+          postService.deletePost(postStub().user.id),
         ).rejects.toThrow(RpcException);
       });
     });
