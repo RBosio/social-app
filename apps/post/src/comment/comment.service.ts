@@ -4,18 +4,19 @@ import {
   CreateCommentDto,
   UpdateCommentDto,
 } from '@app/common';
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
-import { UserService } from 'apps/user/src/user.service';
+import { UserService } from '../../../user/src/user.service';
 import { PostService } from '../post/post.service';
 
 @Injectable()
 export class CommentService {
   constructor(
-    private commentRepository: CommentRepository,
+    @Inject('CommentRepository') private commentRepository: CommentRepository,
     private userService: UserService,
     private postService: PostService,
   ) {}
+
   async findComment(commentId: string): Promise<Comment> {
     const comment = await this.commentRepository.findOneById(commentId);
     if (!comment)
@@ -54,6 +55,8 @@ export class CommentService {
   }
 
   async deleteComment(commentId: string): Promise<void> {
+    await this.findComment(commentId);
+
     await this.commentRepository.delete(commentId);
   }
 }

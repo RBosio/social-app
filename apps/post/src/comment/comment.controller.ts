@@ -27,7 +27,7 @@ export class CommentController {
       data.createCommentDto,
     );
 
-    return 'comment created';
+    return 'comment created!';
   }
 
   @MessagePattern({ cmd: 'update_comment' })
@@ -42,7 +42,7 @@ export class CommentController {
       data.updateCommentDto,
     );
 
-    return 'comment updated';
+    return 'comment updated!';
   }
 
   @MessagePattern({ cmd: 'delete_comment' })
@@ -54,6 +54,6 @@ export class CommentController {
 
     await this.commentService.deleteComment(commentId);
 
-    return 'comment deleted';
+    return 'comment deleted!';
   }
 }

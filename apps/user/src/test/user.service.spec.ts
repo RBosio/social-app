@@ -228,5 +228,20 @@ describe('UserService', () => {
         expect(response).toEqual(undefined);
       });
     });
+
+    describe('when deleteUser is called and user not found', () => {
+      test('then it should throw a rpc excecption', async () => {
+        jest.spyOn(userService, 'findUserById').mockRejectedValueOnce(
+          new RpcException({
+            message: 'user not found',
+            status: HttpStatus.NOT_FOUND,
+          }),
+        );
+
+        await expect(userService.deleteUser(userStub().id)).rejects.toThrow(
+          RpcException,
+        );
+      });
+    });
   });
 });
