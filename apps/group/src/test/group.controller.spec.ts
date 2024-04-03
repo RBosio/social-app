@@ -29,11 +29,6 @@ describe('GroupController', () => {
     groupService = app.get<GroupService>(GroupService);
   });
 
-  test('should be defined', () => {
-    expect(groupController).toBeDefined();
-    expect(groupService).toBeDefined();
-  });
-
   describe('findGroups', () => {
     describe('when findGroups is called', () => {
       let groups: Group[];
@@ -130,7 +125,10 @@ describe('GroupController', () => {
       let response;
 
       beforeEach(async () => {
-        response = await groupController.acceptFriend(mockContext, groupStub().id);
+        response = await groupController.acceptFriend(
+          mockContext,
+          groupStub().id,
+        );
       });
 
       test('then it should call groupService', () => {
@@ -148,7 +146,10 @@ describe('GroupController', () => {
       let response;
 
       beforeEach(async () => {
-        response = await groupController.deleteGroup(mockContext, groupStub().id);
+        response = await groupController.deleteGroup(
+          mockContext,
+          groupStub().id,
+        );
       });
 
       test('then it should call groupService', () => {

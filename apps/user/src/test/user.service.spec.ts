@@ -37,11 +37,6 @@ describe('UserService', () => {
     userRepository = moduleRef.get<UserRepository>('UserRepository');
   });
 
-  test('should be defined', () => {
-    expect(userService).toBeDefined();
-    expect(userRepository).toBeDefined();
-  });
-
   describe('findUsers', () => {
     let users: User[];
 

@@ -8,12 +8,6 @@ export class Message extends BaseEntity {
   @Column()
   message: string;
 
-  @Column()
-  userId: string;
-
-  @Column()
-  groupId: string;
-
   @ManyToOne(() => User, (user) => user.messages)
   user: User;
 

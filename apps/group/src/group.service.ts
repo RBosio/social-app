@@ -44,8 +44,6 @@ export class GroupService {
 
     await Promise.all(userPromises);
 
-    console.log(group);
-
     await this.groupRepository.save(group);
   }
 
