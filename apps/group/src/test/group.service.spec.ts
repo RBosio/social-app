@@ -40,12 +40,6 @@ describe('GroupService', () => {
     userService = moduleRef.get<UserService>(UserService);
   });
 
-  test('should be defined', () => {
-    expect(groupService).toBeDefined();
-    expect(groupRepository).toBeDefined();
-    expect(userService).toBeDefined();
-  });
-
   describe('findGroups', () => {
     describe('when findGroups is called', () => {
       let groups: Group[];

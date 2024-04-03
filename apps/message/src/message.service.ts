@@ -1,15 +1,27 @@
 import { CreateMessageDto, MessageRepository } from '@app/common';
-import { Injectable } from '@nestjs/common';
-import { GroupService } from 'apps/group/src/group.service';
-import { UserService } from 'apps/user/src/user.service';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
+import { GroupService } from '../../group/src/group.service';
+import { UserService } from '../../user/src/user.service';
 
 @Injectable()
 export class MessageService {
   constructor(
-    private messageRepository: MessageRepository,
+    @Inject('MessageRepository') private messageRepository: MessageRepository,
     private userService: UserService,
     private groupService: GroupService,
   ) {}
+
+  async findMessage(messageId: string) {
+    const message = await this.messageRepository.findOneById(messageId);
+    if (!message)
+      throw new RpcException({
+        message: 'message not found',
+        status: HttpStatus.NOT_FOUND,
+      });
+
+    return message;
+  }
 
   async createMessage(
     messageId: string,
@@ -27,6 +39,8 @@ export class MessageService {
   }
 
   async deleteMessage(messageId: string): Promise<void> {
+    await this.findMessage(messageId);
+
     await this.messageRepository.delete(messageId);
   }
 }

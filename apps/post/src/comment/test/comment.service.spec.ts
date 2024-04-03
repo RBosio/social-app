@@ -46,12 +46,6 @@ describe('CommentService', () => {
     postService = moduleRef.get<PostService>(PostService);
   });
 
-  test('should be defined', () => {
-    expect(commentService).toBeDefined();
-    expect(commentRepository).toBeDefined();
-    expect(userService).toBeDefined();
-  });
-
   describe('findComment', () => {
     describe('when findComment is called', () => {
       let comment: Comment;

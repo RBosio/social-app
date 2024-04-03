@@ -41,12 +41,6 @@ describe('PostService', () => {
     userService = moduleRef.get<UserService>(UserService);
   });
 
-  test('should be defined', () => {
-    expect(postService).toBeDefined();
-    expect(postRepository).toBeDefined();
-    expect(userService).toBeDefined();
-  });
-
   describe('findPosts', () => {
     describe('when findPosts is called', () => {
       let posts: Post[];

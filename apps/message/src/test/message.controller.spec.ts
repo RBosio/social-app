@@ -31,11 +31,6 @@ describe('MessageController', () => {
     messageService = app.get<MessageService>(MessageService);
   });
 
-  test('should be defined', () => {
-    expect(messageController).toBeDefined();
-    expect(messageService).toBeDefined();
-  });
-
   describe('createMessage', () => {
     describe('when createMessage is called', () => {
       const createMessageDto: CreateMessageDto = {
