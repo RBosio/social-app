@@ -259,9 +259,9 @@ describe('PostService', () => {
             status: HttpStatus.NOT_FOUND,
           }),
         );
-        await expect(
-          postService.deletePost(postStub().user.id),
-        ).rejects.toThrow(RpcException);
+        await expect(postService.deletePost(postStub().id)).rejects.toThrow(
+          RpcException,
+        );
       });
     });
   });
