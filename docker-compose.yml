@@ -17,6 +17,7 @@ services:
       - post
       - group
       - message
+      - mail
       - rabbitmq
       - mysql
       - mongo
@@ -76,6 +77,21 @@ services:
     volumes:
       - .:/usr/src/app
     command: npm run start:dev message
+    depends_on:
+      - rabbitmq
+      - mysql
+      - mongo
+
+  mail:
+    container_name: mail
+    build:
+      context: .
+      dockerfile: ./apps/mail/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    command: npm run start:dev mail
     depends_on:
       - rabbitmq
       - mysql

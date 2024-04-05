@@ -3,6 +3,7 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { ConfigModule } from '@nestjs/config';
 import {
+  MAIL_SERVICE,
   MysqlModule,
   RmqModule,
   User,
@@ -11,13 +12,14 @@ import {
 } from '@app/common';
 import { DataSource } from 'typeorm';
 import { TypeOrmModule, getDataSourceToken } from '@nestjs/typeorm';
+import { ClientRMQ } from '@nestjs/microservices';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    RmqModule,
+    RmqModule.register(MAIL_SERVICE),
     MysqlModule,
     TypeOrmModule.forFeature([User]),
   ],
@@ -32,10 +34,10 @@ import { TypeOrmModule, getDataSourceToken } from '@nestjs/typeorm';
     },
     {
       provide: UserService,
-      useFactory: (userRepo: UserRepository) => {
-        return new UserService(userRepo);
+      useFactory: (userRepo: UserRepository, mailService: ClientRMQ) => {
+        return new UserService(userRepo, mailService);
       },
-      inject: [UserTypeOrmRepository],
+      inject: [UserTypeOrmRepository, MAIL_SERVICE],
     },
   ],
   exports: [UserService],
