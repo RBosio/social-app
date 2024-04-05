@@ -28,6 +28,7 @@ export class CreateGroupDto {
     description: 'The users id of the group',
     required: true,
     type: 'array',
+    example: ['2d4d6481-37b1-4db6-b675-9c08a89b81af'],
   })
   @IsNotEmpty()
   @IsArray()

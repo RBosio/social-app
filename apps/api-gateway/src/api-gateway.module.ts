@@ -6,6 +6,7 @@ import { GroupModule } from './group/group.module';
 import { MessageModule } from './message/message.module';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { ChatModule } from './chat.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { APP_GUARD } from '@nestjs/core';
     PostModule,
     GroupModule,
     MessageModule,
+    ChatModule,
   ],
   controllers: [],
   providers: [
