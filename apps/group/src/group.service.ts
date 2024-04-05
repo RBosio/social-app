@@ -29,6 +29,7 @@ export class GroupService {
   async createGroup(groupId: string, createGroupDto: CreateGroupDto) {
     const group = this.groupRepository.create(createGroupDto);
     group.id = groupId;
+    group.users = [];
 
     if (createGroupDto.usersId.length < 2) {
       throw new RpcException({
