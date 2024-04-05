@@ -79,9 +79,6 @@ export class UserController {
   @ApiBadRequestResponse({
     description: 'Email already exists',
   })
-  @ApiNotFoundResponse({
-    description: 'User not found',
-  })
   createUser(
     @Param('userId') userId: string,
     @Body() createUserDto: CreateUserDto,

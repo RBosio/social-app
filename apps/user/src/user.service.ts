@@ -1,16 +1,20 @@
 import {
   CreateUserDto,
+  MAIL_SERVICE,
   UpdateUserDto,
   User,
   UserRepository,
 } from '@app/common';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { RpcException } from '@nestjs/microservices';
+import { ClientRMQ, RpcException } from '@nestjs/microservices';
 import { hash } from 'bcryptjs';
 
 @Injectable()
 export class UserService {
-  constructor(@Inject("UserRepository") private userRepository: UserRepository) {}
+  constructor(
+    @Inject('UserRepository') private userRepository: UserRepository,
+    @Inject(MAIL_SERVICE) private mailService: ClientRMQ,
+  ) {}
 
   async findUsers(): Promise<User[]> {
     const users = await this.userRepository.findAll();
@@ -51,6 +55,8 @@ export class UserService {
     const user = this.userRepository.create(createUserDto);
     user.id = id;
     user.password = await hash(user.password, 10);
+
+    this.mailService.emit({ cmd: 'sendMail' }, user.email);
 
     await this.userRepository.save(user);
   }
