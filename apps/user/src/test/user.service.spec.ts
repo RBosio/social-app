@@ -2,18 +2,20 @@ import { Test } from '@nestjs/testing';
 import { UserService } from '../user.service';
 import {
   CreateUserDto,
+  MAIL_SERVICE,
   UpdateUserDto,
   User,
   UserRepository,
 } from '@app/common';
 import { userStub } from './stubs/user.stub';
-import { RpcException } from '@nestjs/microservices';
+import { ClientRMQ, RpcException } from '@nestjs/microservices';
 import * as bcrypt from 'bcryptjs';
 import { HttpStatus } from '@nestjs/common';
 
 describe('UserService', () => {
   let userService: UserService;
   let userRepository: UserRepository;
+  let mailService: ClientRMQ;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -25,9 +27,15 @@ describe('UserService', () => {
             findAll: jest.fn().mockResolvedValue([userStub()]),
             findOneById: jest.fn().mockResolvedValue(userStub()),
             findOneByEmail: jest.fn().mockResolvedValue(userStub()),
-            create: jest.fn().mockResolvedValue(null),
+            create: jest.fn().mockReturnValue(userStub()),
             save: jest.fn().mockResolvedValue(null),
             delete: jest.fn().mockResolvedValue(null),
+          },
+        },
+        {
+          provide: MAIL_SERVICE,
+          useValue: {
+            emit: jest.fn(),
           },
         },
       ],
@@ -35,6 +43,7 @@ describe('UserService', () => {
 
     userService = moduleRef.get<UserService>(UserService);
     userRepository = moduleRef.get<UserRepository>('UserRepository');
+    mailService = moduleRef.get(MAIL_SERVICE);
   });
 
   describe('findUsers', () => {
@@ -120,13 +129,13 @@ describe('UserService', () => {
   describe('createUser', () => {
     describe('when createUser is called', () => {
       let response;
+      const createUserDto: CreateUserDto = {
+        email: userStub().email,
+        name: userStub().name,
+        password: userStub().password,
+      };
 
       beforeEach(async () => {
-        const createUserDto: CreateUserDto = {
-          email: userStub().email,
-          name: userStub().name,
-          password: userStub().password,
-        };
         jest
           .spyOn(userRepository, 'findOneByEmail')
           .mockResolvedValueOnce(null);
@@ -136,7 +145,14 @@ describe('UserService', () => {
       });
 
       test('then it should call userRepository', () => {
-        expect(userRepository.create).toHaveBeenCalled();
+        expect(userRepository.create).toHaveBeenCalledWith(createUserDto);
+      });
+
+      test('then it should call mailService', () => {
+        expect(mailService.emit).toHaveBeenCalledWith(
+          { cmd: 'sendMail' },
+          userStub().email,
+        );
       });
 
       test('then it should return undefined', () => {
