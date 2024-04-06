@@ -9,7 +9,7 @@ export class Post extends BaseEntity {
   description: string;
 
   @Column({ nullable: true })
-  image?: string;
+  filename?: string;
 
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];

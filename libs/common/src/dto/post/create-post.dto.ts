@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreatePostDto {
   @ApiProperty({
@@ -23,4 +23,15 @@ export class CreatePostDto {
   @IsNotEmpty()
   @IsString()
   userId: string;
+
+  @ApiProperty({
+    name: 'file',
+    description: 'file',
+    type: 'string',
+    format: 'binary',
+    required: false,
+  })
+  @IsOptional()
+  file?: Express.Multer.File;
+  filename?: string;
 }
