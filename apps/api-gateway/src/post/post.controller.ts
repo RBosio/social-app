@@ -8,12 +8,15 @@ import {
   Param,
   Patch,
   Put,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
 import { catchError } from 'rxjs';
 import { ErrorHandlerService } from '../error/error-handler.service';
 import {
   ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -21,13 +24,22 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { v4 as uuid } from 'uuid';
+import { ConfigService } from '@nestjs/config';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 @ApiTags('post')
 @Controller('post')
 export class PostController {
+  private readonly s3Client = new S3Client({
+    region: this.configService.get('AWS_S3_REGION'),
+  });
+
   constructor(
     @Inject(POST_SERVICE) private postService: ClientRMQ,
     private errorHandlerService: ErrorHandlerService,
+    private configService: ConfigService,
   ) {}
 
   @Get()
@@ -71,6 +83,7 @@ export class PostController {
     description: 'Post id',
     example: '3a1b3468-a410-4a89-936a-81504cc137e1',
   })
+  @ApiConsumes('multipart/form-data')
   @ApiBody({
     type: CreatePostDto,
   })
@@ -80,10 +93,25 @@ export class PostController {
   @ApiNotFoundResponse({
     description: 'User not found',
   })
+  @UseInterceptors(FileInterceptor('file'))
   createPost(
     @Param('postId') postId: string,
     @Body() createPostDto: CreatePostDto,
+    @UploadedFile() file: Express.Multer.File,
   ) {
+    const nameSplitted = file.originalname.split('.');
+    const filename = uuid() + '.' + nameSplitted[nameSplitted.length - 1];
+
+    this.s3Client.send(
+      new PutObjectCommand({
+        Bucket: this.configService.get('AWS_S3_BUCKET'),
+        Key: filename,
+        Body: file.buffer,
+      }),
+    );
+
+    createPostDto.filename = filename;
+
     return this.postService
       .send({ cmd: 'create_post' }, { postId, createPostDto })
       .pipe(

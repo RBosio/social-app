@@ -4,7 +4,7 @@ export const createPostStub = (): Post => {
   return {
     id: '32c0eee9-b7f6-4e8b-964e-868e81fdafec',
     description: 'This is a post',
-    image: null,
+    filename: null,
     comments: [],
     likedBy: [],
     user: null,
