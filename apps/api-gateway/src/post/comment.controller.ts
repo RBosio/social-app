@@ -11,6 +11,7 @@ import {
   Param,
   Patch,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
 import { catchError } from 'rxjs';
@@ -23,9 +24,13 @@ import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiCookieAuth,
 } from '@nestjs/swagger';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('comment')
+@UseGuards(AuthGuard)
+@ApiCookieAuth()
 @Controller('comment')
 export class CommentController {
   constructor(

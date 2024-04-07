@@ -18,6 +18,7 @@ services:
       - group
       - message
       - mail
+      - auth
       - rabbitmq
       - mysql
       - mongo
@@ -92,6 +93,21 @@ services:
     volumes:
       - .:/usr/src/app
     command: npm run start:dev mail
+    depends_on:
+      - rabbitmq
+      - mysql
+      - mongo
+
+  auth:
+    container_name: auth
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    command: npm run start:dev auth
     depends_on:
       - rabbitmq
       - mysql

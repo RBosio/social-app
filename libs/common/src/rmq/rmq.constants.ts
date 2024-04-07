@@ -4,3 +4,4 @@ export const GROUP_SERVICE = 'GROUP';
 export const MESSAGE_SERVICE = 'MESSAGE';
 export const COMMENT_SERVICE = 'COMMENT';
 export const MAIL_SERVICE = 'MAIL';
+export const AUTH_SERVICE = 'AUTH';

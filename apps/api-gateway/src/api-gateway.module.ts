@@ -8,6 +8,7 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { ChatModule } from './chat.module';
 import * as Joi from 'joi';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import * as Joi from 'joi';
         AWS_S3_BUCKET: Joi.string().required(),
         AWS_ACCESS_KEY_ID: Joi.string().required(),
         AWS_SECRET_ACCESS_KEY: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
       }),
     }),
     ThrottlerModule.forRoot([
@@ -31,6 +33,7 @@ import * as Joi from 'joi';
     GroupModule,
     MessageModule,
     ChatModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [
