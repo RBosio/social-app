@@ -24,11 +24,13 @@ import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiCookieAuth,
 } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('comment')
 @UseGuards(AuthGuard)
+@ApiCookieAuth()
 @Controller('comment')
 export class CommentController {
   constructor(

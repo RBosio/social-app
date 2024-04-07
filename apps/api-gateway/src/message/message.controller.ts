@@ -19,11 +19,13 @@ import {
   ApiBody,
   ApiOkResponse,
   ApiNotFoundResponse,
+  ApiCookieAuth,
 } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('message')
 @UseGuards(AuthGuard)
+@ApiCookieAuth()
 @Controller('message')
 export class MessageController {
   constructor(

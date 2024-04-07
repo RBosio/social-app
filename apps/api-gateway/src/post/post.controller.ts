@@ -18,6 +18,7 @@ import { ErrorHandlerService } from '../error/error-handler.service';
 import {
   ApiBody,
   ApiConsumes,
+  ApiCookieAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -33,6 +34,7 @@ import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('post')
 @UseGuards(AuthGuard)
+@ApiCookieAuth()
 @Controller('post')
 export class PostController {
   private readonly s3Client = new S3Client({

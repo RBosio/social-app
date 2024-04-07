@@ -15,6 +15,7 @@ import { catchError } from 'rxjs';
 import { ErrorHandlerService } from '../error/error-handler.service';
 import {
   ApiBody,
+  ApiCookieAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -26,6 +27,7 @@ import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('group')
 @UseGuards(AuthGuard)
+@ApiCookieAuth()
 @Controller('group')
 export class GroupController {
   constructor(

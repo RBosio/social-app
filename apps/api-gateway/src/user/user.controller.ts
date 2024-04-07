@@ -16,6 +16,7 @@ import { ErrorHandlerService } from '../error/error-handler.service';
 import {
   ApiBadRequestResponse,
   ApiBody,
+  ApiCookieAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -35,6 +36,7 @@ export class UserController {
 
   @Get()
   @UseGuards(AuthGuard)
+  @ApiCookieAuth()
   @ApiOperation({ summary: 'Find all users' })
   @ApiOkResponse({
     description: 'Return all users',
@@ -45,6 +47,7 @@ export class UserController {
 
   @Get(':userId')
   @UseGuards(AuthGuard)
+  @ApiCookieAuth()
   @ApiOperation({ summary: 'Find user by id' })
   @ApiParam({
     name: 'userId',
@@ -106,6 +109,7 @@ export class UserController {
 
   @Patch(':userId')
   @UseGuards(AuthGuard)
+  @ApiCookieAuth()
   @ApiOperation({ summary: 'Update user' })
   @ApiParam({
     name: 'userId',
@@ -143,6 +147,7 @@ export class UserController {
 
   @Delete(':userId')
   @UseGuards(AuthGuard)
+  @ApiCookieAuth()
   @ApiOperation({ summary: 'Delete user' })
   @ApiParam({
     name: 'userId',
