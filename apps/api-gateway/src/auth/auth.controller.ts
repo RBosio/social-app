@@ -1,16 +1,32 @@
 import { AUTH_SERVICE, LoginUserDto } from '@app/common';
-import { Body, Controller, Inject, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
 import { catchError, lastValueFrom } from 'rxjs';
 import { ErrorHandlerService } from '../error/error-handler.service';
 import {
   ApiBody,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
+import { AuthGuard } from './auth.guard';
+
+interface RequestWithUser extends Request {
+  user: string;
+}
 
 @ApiTags('auth')
 @Controller('auth')
@@ -24,6 +40,7 @@ export class AuthController {
   @Post('login')
   @ApiOperation({ summary: 'Login user' })
   @ApiBody({ type: LoginUserDto })
+  @ApiOkResponse({ description: 'User logged in' })
   @ApiUnauthorizedResponse({ description: 'Email or password wrong' })
   async login(@Body() loginUserDto: LoginUserDto, @Res() res: Response) {
     const user = await lastValueFrom(
@@ -39,5 +56,21 @@ export class AuthController {
 
     res.cookie('token', `Bearer ${token}`, { httpOnly: true });
     return res.send({ token });
+  }
+
+  @Get('profile')
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Profile user' })
+  @ApiOkResponse({ description: 'User profile' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @ApiNotFoundResponse({ description: 'User not found' })
+  async profile(@Req() req: RequestWithUser) {
+    return this.authService.send({ cmd: 'profile' }, req.user).pipe(
+      catchError((value) => {
+        this.errorHandlerService.handle(value);
+
+        return value;
+      }),
+    );
   }
 }

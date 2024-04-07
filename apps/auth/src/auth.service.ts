@@ -24,5 +24,8 @@ export class AuthService {
 
     return user;
   }
-  profile(userId: string) {}
+
+  profile(userId: string) {
+    return this.userService.findUserById(userId);
+  }
 }
