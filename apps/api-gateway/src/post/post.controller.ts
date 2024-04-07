@@ -9,6 +9,7 @@ import {
   Patch,
   Put,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
@@ -28,8 +29,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { v4 as uuid } from 'uuid';
 import { ConfigService } from '@nestjs/config';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('post')
+@UseGuards(AuthGuard)
 @Controller('post')
 export class PostController {
   private readonly s3Client = new S3Client({

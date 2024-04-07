@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
 import { catchError } from 'rxjs';
@@ -21,8 +22,10 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('group')
+@UseGuards(AuthGuard)
 @Controller('group')
 export class GroupController {
   constructor(

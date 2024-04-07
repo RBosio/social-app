@@ -3,10 +3,10 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
   Inject,
   Param,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
 import { catchError } from 'rxjs';
@@ -20,8 +20,10 @@ import {
   ApiOkResponse,
   ApiNotFoundResponse,
 } from '@nestjs/swagger';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('message')
+@UseGuards(AuthGuard)
 @Controller('message')
 export class MessageController {
   constructor(
