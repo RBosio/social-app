@@ -1,7 +1,7 @@
 import { LoginUserDto } from '@app/common';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
-import { UserService } from 'apps/user/src/user.service';
+import { UserService } from '../../user/src/user.service';
 import { compare } from 'bcryptjs';
 
 @Injectable()

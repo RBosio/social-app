@@ -127,7 +127,7 @@ describe('UserService', () => {
   });
 
   describe('createUser', () => {
-    /* describe('when createUser is called', () => {
+    describe('when createUser is called', () => {
       let response;
       const createUserDto: CreateUserDto = {
         email: userStub().email,
@@ -139,9 +139,12 @@ describe('UserService', () => {
         jest
           .spyOn(userRepository, 'findOneByEmail')
           .mockResolvedValueOnce(null);
-        jest
-          .spyOn(bcrypt, 'hash')
-          .mockResolvedValueOnce('asdad-sadsd-sadsadasd');
+        const bcryptHash = jest
+          .fn()
+          .mockResolvedValue(
+            '$2a$10$UarXIBgadq9JUZG.nN..aOpuiKyF7EsNz.PGfaof6jrGZrBXOpGqW',
+          );
+        (bcrypt.hash as jest.Mock) = bcryptHash;
 
         response = await userService.createUser(userStub().id, createUserDto);
       });
@@ -160,7 +163,7 @@ describe('UserService', () => {
       test('then it should return undefined', () => {
         expect(response).toEqual(undefined);
       });
-    }); */
+    });
 
     describe('when createUser is called and email already exists', () => {
       test('then it should throw a rpc exception', async () => {
