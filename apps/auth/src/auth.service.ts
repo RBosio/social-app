@@ -1,16 +1,12 @@
 import { LoginUserDto } from '@app/common';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { RpcException } from '@nestjs/microservices';
 import { UserService } from 'apps/user/src/user.service';
 import { compare } from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private userService: UserService,
-    private jwtService: JwtService,
-  ) {}
+  constructor(private userService: UserService) {}
 
   async login(loginUserDto: LoginUserDto) {
     const user = await this.userService.findUserByEmail(loginUserDto.email);
@@ -26,9 +22,7 @@ export class AuthService {
         status: HttpStatus.UNAUTHORIZED,
       });
 
-    const token = await this.jwtService.signAsync({ sub: user.id });
-
-    return { token };
+    return user;
   }
   profile(userId: string) {}
 }
